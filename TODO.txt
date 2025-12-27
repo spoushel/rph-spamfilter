@@ -1,0 +1,8 @@
+- HELCA napise, OBE kouknout: strukturu toho filter.py nejak funkcne 
+- NELA: udelat script kterej testuje filtr (skoro mame jen prakticky naucit se)
+- upravovat v prubehu ty skore
+- vyresit zpracovani html a normalni
+- naimplementovat ten neucici se filter podle seznamu vlastnosti do nejakyho modulu?
+- NELA: opakovani kategorie
+- HELCA: dicts, obe suggestions:3
+- detailne TODO
