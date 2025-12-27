@@ -1,0 +1,19 @@
+((tohle je krok 4 z toho co je na strankach))
+
+3 typy:
+naive: vsechny ok
+paranoid: vsechny spam
+random: rozhoduje se nahodne
+
+V tomto kroku máte vytvořit 3 třídy pojmenované NaiveFilter, ParanoidFilter a RandomFilter umístěné v modulu simplefilters.py. 
+
+skript na hodnoceni filtru (asi vyuzije ty veci z minulych steps..?):
+
+
+Vytvořte jednoduchý skript, který vypočte kvalitu predikcí zvoleného filtru. Skript:
+    importuje třídu zvoleného filtru,
+    zavolá metodu train() na jedné poskytnuté datové sadě,
+    zavolá metodu test() na druhé poskytnuté datové sadě,
+    zavolá compute_quality_for_corpus() pro druhou datovou sadu,
+    kvalitu vypíše,
+    odstraní soubor !prediction.txt z datové sady.
