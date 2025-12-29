@@ -4,18 +4,14 @@ import quality
 import corpus
 import confmat
 import os
-#tokenizace str.
-#email.message_from_string(), email.message_from_file() umožní vytvořit objekt třídy Message z řetězce či přímo ze souboru.
-#metoda Message.walk() pak umožní systematicky email procházet po jednotlivých částech.
+import dicts as ds
+import penalties as ps
+import re
 
 SPAM_TAG = "SPAM"
 HAM_TAG = "OK"
 
-INTERPUNCTION = {".", ",", "?", "!", ";"}
 SPAM_THRESHOLD = 0.6
-DOUBLED_INTERPUNCTION_PENALTY = 0.1
-TOO_MANY_CAPS_PENALTY = 0.15
-
 
 class MyFilter:
     def __init__(self):
@@ -33,22 +29,22 @@ class MyFilter:
         #print docasnej, jen testuju, pujde to do funkce ^ az bude hotova
         print(self.prediction)
         #output nic
-
-# zakladnejsi funkce here, a pak je vyuzit do modulu? 
-
-#counter = Counter(tokens)
-#fce sorted()
     
     def cycle_emails(self, corp):
-        for file, body in corp.emails():
+        for file, raw in corp.emails():
+            sender_email, time_sent, subject, true_body = self.parse_email(raw)
             self.spam_likelihood = 0 #reset u kazdeho mailu
-            self.check_double_inter(body)
-            self.check_caps(body)
+            if self.general_or_html(true_body):
+                # TODO: add html specific checks here
+                true_body = self.normalise_html_body(true_body) # strip do normalni podoby pro basic checks\
+
+            self.check_double_inter(true_body)
+            self.check_caps(true_body)
             # TODO tu dalsi kontroly...
             # ...
+            if 
             self.prediction[file] = self.decide_if_spam_and_tag(self.spam_likelihood)
 
-        
     def decide_if_spam_and_tag(self, likelihood):
         if likelihood >= SPAM_THRESHOLD:
             return SPAM_TAG
@@ -57,9 +53,49 @@ class MyFilter:
     def create_prediction_file(self, dictionary): #TODO vytvori txt soubor z dict
         pass
 
+    def general_or_html(self, true_body):
+        lower = true_body.lower()
+        return any(tag in lower for tag in ("<html>", "<body>", "<br>", "<head", "<div"))
+    
+    def normalise_html_body(self, true_body):
+        text = re.sub(r"<[^>]+>", "", true_body)  # strip anything co je <[sth]>
+        text = " ".join(text.split())
+        return text
+
+    def parse_email(self, body): #vrati [sender email, time sent, subject, true body]
+        sender_email, time_sent, subject, true_body = "", "", "", ""
+
+        text = body.replace("\r\n", "\n").replace("\r", "\n")
+        lines = text.split("\n")
+
+        in_headers = True
+        body_start_idx = 0
+
+        for idx, line in enumerate(lines):
+            if in_headers:
+                if line.strip() == "":
+                    in_headers = False
+                    body_start_idx = idx + 1
+                    break
+
+            if line.startswith("From:"): 
+                for word in line.split():
+                    if '@' in word:
+                        sender_email = word.strip('<>"\'()[]')
+            if line.startswith("Subject:"): 
+                subject = line.split(":", 1)[1].strip() if ":" in line else ""
+            if line.startswith("Date:"):
+                for word in line.split():
+                    if ':' in word:
+                        time_sent = word
+
+        true_body = "\n".join(lines[body_start_idx:]).lstrip("\n")
+        return [sender_email, time_sent, subject, true_body]
+    
+    ## ACTUAL TESTY
 
     def check_double_inter(self, body):
-        for p in INTERPUNCTION:
+        for p in ds.INTERPUNCTION:
             ch_index = 0
             while True:
                 ch_index = body.find(p, ch_index)
@@ -67,7 +103,7 @@ class MyFilter:
                     break
 
                 if ch_index + 1 <len(body) and body[ch_index + 1] == p:
-                    self.spam_likelihood += DOUBLED_INTERPUNCTION_PENALTY
+                    self.spam_likelihood += ps.DOUBLED_INTERPUNCTION_PENALTY
                 
                 ch_index += 1
     
@@ -79,7 +115,7 @@ class MyFilter:
             elif body[i].isspace() is False:
                 caps_counter = 0
             if (caps_counter > 20):
-                self.spam_likelihood += TOO_MANY_CAPS_PENALTY
+                self.spam_likelihood += ps.TOO_MANY_CAPS_PENALTY
                 caps_counter = 0
 
 if __name__ == "__main__":

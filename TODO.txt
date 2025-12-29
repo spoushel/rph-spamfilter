@@ -1,8 +1,21 @@
-- HELCA napise, OBE kouknout: strukturu toho filter.py nejak funkcne 
-- NELA: udelat script kterej testuje filtr (skoro mame jen prakticky naucit se)
-- upravovat v prubehu ty skore
-- vyresit zpracovani html a normalni
-- naimplementovat ten neucici se filter podle seznamu vlastnosti do nejakyho modulu?
-- NELA: opakovani kategorie
-- HELCA: dicts, obe suggestions:3
-- detailne TODO
+
+- vypracovat vsechny dicts co potrebujem z README
+- prepsat penalties z README do modulu do vars
+- udelat vsechny testy co jsou ten base level (pokracovat s tema funkcema co nela zacala)
+    - opakovaci
+    - blizko u sebe
+    - vsechny dicts (kazdej bereme trosku jinak)
+    - vlastnosti
+    - html specific vlastnosti
+    - uplne naposledy se rozhodnout podle odkazu
+- udelat script kterej testuje filtr (skoro mame?)
+- funkcne naimplementovat NEucici se filter, at mame zaklad
+- vytvorit ucici se funkce podle README 
+- funkcne naimplementovat ucici se filter additional
+
+
+latest zmeny: 
+- email parsed na 4 konkretni veci (muzeme pridat dalsi)
+- presunula jsem penalties a dicts do modulu jako ps a ds
+- novy functions rozliseni general a html, html normalised body
+- zacala jsem ty dicts
