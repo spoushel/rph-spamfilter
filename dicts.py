@@ -1,5 +1,8 @@
 INTERPUNCTION = {".", ",", "?", "!", ";"}
 
+ABBREVIATION = {"a.m", "p.m", "P.S", "e.g", "i.e", "N.B", "q.v"}
+
+
 # dictionary pro hodnotu kazdyho slova, jak moc ho penalizujem
 # vzit v potaz mnozstvi celkove
 # rozdelit kategorie (jedno free je ok, jedna sexy single ne)
@@ -20,14 +23,14 @@ IGNORED = {"the", "be", "to", "of", "and", "a", "in", "that", "have", "i",
 
 # reklama/money of some sort: free, penize, cena, kvalita, sleva, dollars... 
 # 5 a vic uz je bad, nasobit 1.2 pak u kazdyho dalsiho
-MONEY = {"free", "money", "sale", "gift", "dollar", "dollars", "USD", ""}
+MONEY = {"free", "money", "sale", "gift", "dollar", "dollars", "USD", "million"}
 
 # divny countries typu Hawaii, Uganda nevim = jakejkoliv mention 0.1
 # nevim jaky vsechny zaradit, zkusim najit nejaky lists
 COUNTRIES = {"Uganda", "Hawaii", "Nigeria", "Morocco"} 
 
 URGENCY = {"please", "give", "send", "beg", "begging", "urgent", "important", 
-           "crucial", "immediately", "asap", "soon"}
+           "crucial", "immediately", "asap", "soon", "need"}
 # urgency, prosby, requests, time left etc. = 2 (3?) a vic uz je bad, 0.05
 
 GOOD_DOMAINES = {"gmail.com"} #lol actuall nevim :3

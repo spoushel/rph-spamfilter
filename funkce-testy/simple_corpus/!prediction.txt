@@ -1,0 +1,4 @@
+test_ok.txt OK
+test_special_punc.txt OK
+test_text.txt SPAM
+test_vety.txt SPAM

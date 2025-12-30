@@ -19,3 +19,6 @@ latest zmeny:
 - presunula jsem penalties a dicts do modulu jako ps a ds
 - novy functions rozliseni general a html, html normalised body
 - zacala jsem ty dicts
+
+- testovani kapitalizace na zacatku vety a mezery po znamenkach
+- vytvoreni !prediction.txt

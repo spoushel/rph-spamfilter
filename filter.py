@@ -25,9 +25,8 @@ class MyFilter:
         corp = corpus.Corpus(path_to_corpus)
         self.cycle_emails(corp)
         #TODO vytvoří v zadaném adresáři soubor !prediction.txt
-        self.create_prediction_file(self.prediction)
-        #print docasnej, jen testuju, pujde to do funkce ^ az bude hotova
-        print(self.prediction)
+        self.create_prediction_file(self.prediction, path_to_corpus)
+        print(self.prediction) # < pak vymazat
         #output nic
     
     def cycle_emails(self, corp):
@@ -40,9 +39,12 @@ class MyFilter:
 
             self.check_double_inter(true_body)
             self.check_caps(true_body)
+            self.check_sentence_end(true_body)
+            self.check_comma_spaces(true_body)
             # TODO tu dalsi kontroly...
             # ...
-            if 
+            #if 
+            print(self.spam_likelihood) # < pak vymazat
             self.prediction[file] = self.decide_if_spam_and_tag(self.spam_likelihood)
 
     def decide_if_spam_and_tag(self, likelihood):
@@ -50,7 +52,10 @@ class MyFilter:
             return SPAM_TAG
         return HAM_TAG
 
-    def create_prediction_file(self, dictionary): #TODO vytvori txt soubor z dict
+    def create_prediction_file(self, dictionary, corpus_path): #TODO vytvori txt soubor z dict
+        with open(os.path.join(corpus_path, "!prediction.txt"), "w") as f:
+            for key in dictionary.keys():
+                f.write(key + " " + dictionary[key] +"\n")
         pass
 
     def general_or_html(self, true_body):
@@ -92,6 +97,37 @@ class MyFilter:
         true_body = "\n".join(lines[body_start_idx:]).lstrip("\n")
         return [sender_email, time_sent, subject, true_body]
     
+
+    def special_punc_case(self, whole_string, punc_index):
+        word = self.is_in_word(whole_string, punc_index)
+
+        if word in ds.ABBREVIATION: # ustaleny zkratky
+            return True
+        if word.startswith("www.") or word.startswith("http"): # odkazy
+            return True
+        if word.find("@") != -1: # emailovy adresy
+            return True
+        for i in range(len(word)): # datum, cas, vse s cisly
+            if (not word[i].isnumeric()) and (word[i] not in ds.INTERPUNCTION):
+                break
+            if i == range(len(word)):
+                return True
+        
+        return False
+    
+    def is_in_word(self, body, char_index): #vrati slovo ve kterem se char nachazi
+        index_counter = 0
+        for word in body.split():
+            body_start = index_counter
+            body_end = index_counter + len(word)
+            if body_start <= char_index < body_end:
+                return word
+            index_counter = body_end + 1 # 1 kvuli mezere
+        
+        return body[char_index]  
+
+
+    
     ## ACTUAL TESTY
 
     def check_double_inter(self, body):
@@ -117,6 +153,50 @@ class MyFilter:
             if (caps_counter > 20):
                 self.spam_likelihood += ps.TOO_MANY_CAPS_PENALTY
                 caps_counter = 0
+
+
+    def check_sentence_end(self, body): # kontroluje jestli je na konci vety mezera a velke pismeno
+        ch_index = 0
+        end_interp = [".", "!", "?"]
+        for p in end_interp:
+            while True:
+                ch_index = body.find(p, ch_index)
+                if ch_index == -1:
+                    break
+
+                if self.special_punc_case(body, ch_index):
+                    break
+
+                if ch_index + 1 <len(body) and not body[ch_index + 1].isspace():
+                    self.spam_likelihood += ps.MISSING_SPACE_PENALTY 
+                    if body[ch_index + 1].islower(): 
+                        self.spam_likelihood += ps.MISSING_CAPITALISATION_PENALTY 
+
+                elif ch_index + 2 <len(body) and body[ch_index + 2].islower(): 
+                    self.spam_likelihood += ps.MISSING_CAPITALISATION_PENALTY
+
+                ch_index += 1
+
+    def check_comma_spaces(self, body): # kontroluje mezery po , ; :
+        ch_index = 0
+        punctuation = [",", ";", ":"]
+        for p in punctuation:
+            while True:
+                ch_index = body.find(p, ch_index)
+                if ch_index == -1:
+                    break
+
+                if self.special_punc_case(body, ch_index):
+                    break
+                
+                if ch_index + 1 <len(body) and not body[ch_index + 1].isspace():
+                    self.spam_likelihood += ps.MISSING_SPACE_PENALTY
+                ch_index += 1
+
+        
+                    
+
+
 
 if __name__ == "__main__":
     filter = MyFilter()
