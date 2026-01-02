@@ -24,9 +24,7 @@ class MyFilter:
     def test(self, path_to_corpus): # adresar s emails BEZ !truth
         corp = corpus.Corpus(path_to_corpus)
         self.cycle_emails(corp)
-        #TODO vytvoří v zadaném adresáři soubor !prediction.txt
         self.create_prediction_file(self.prediction, path_to_corpus)
-        print(self.prediction) # < pak vymazat
         #output nic
     
     def cycle_emails(self, corp):
@@ -201,5 +199,7 @@ class MyFilter:
 if __name__ == "__main__":
     filter = MyFilter()
     base_dir = os.path.dirname(os.path.abspath(__file__))
-    path = os.path.join(base_dir, "funkce-testy", "simple_corpus")
+    path = os.path.join(base_dir, "spamfilter-data", "1")
     filter.test(path) #testovani na mini corpusu
+    quality_score = quality.compute_quality_for_corpus(os.path.join(base_dir, "spamfilter-data", "1"))
+    print(quality_score)
