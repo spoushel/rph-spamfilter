@@ -1,7 +1,11 @@
 - HELCA: udelat script na porovnani co mame spatne, se spam likelihood, nahore co je FP potom FN (pridat i do predictions)
 - HELCA: updatenout tokenizaci emailu in-reply-to: automaticky neni spam
 - BOTH: prubezne pripisovat penalties do vars, dodelavat dictionaries na zaklade spam emailu, nezapomenout na lower()
-- udelat vsechny testy co jsou ten base level (pokracovat s tema funkcema co nela zacala)
+- !BOTH: rozdeleny, udelat vsechny testy co jsou ten base level (pokracovat s tema funkcema co nela zacala)
+- v 16 sobota nejpozdejs zavolat :3 :
+    - idealne budou vsechny funkce uz fungovat
+    - testovat a spolu koukat co nam nefunguje 
+    - domluvit se ohledne uciciho filtru, zatim asi hlavne o to aby tam trochu neco bylo
 
 - neucici se filter aspon na 50% 
 - vytvorit ucici se funkce

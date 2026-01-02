@@ -19,25 +19,24 @@ STRATEGIE:
 - defaultne je to spam od 0.6 (asi nastavit jako variable)
 - basic filter:
     - pocet/opakovani overall: 
-        - 5 je zaklad, vic nez (delka chars body/200)krat se zvysujou body = 0.1, dalsi 0.05
-        - dlouhy vety bez tecek: vic nez 200 znaku mezi teckama (nebrat carky) = zadny 0.10, jinak each 0.05
-        - chybi interpunkce skoro kompletne (delka chars body nejaky stovky/200) (i carky) = 0.1, pokud je to 0 nebo 1 tak 0.15
-        - konkretni slovo, delsi nez 3 chary (15 a vickrat) = 0.1, ke kazdymu dalsimu nasobit 1.5
-        - caps lock v nazvu (vic nez cca jedno slovo) = 0.015
-        - pocet slov caps lockem - 2 - 5 = 0.15, vice jak 6 0.25
+        - HELCA: 5 je zaklad, vic nez (delka chars body/200)krat se zvysujou body = 0.1, dalsi 0.05
+        - HELCA: dlouhy vety bez tecek: vic nez 200 znaku mezi teckama (nebrat carky) = zadny 0.10, jinak each 0.05
+        - HELCA: chybi interpunkce skoro kompletne (delka chars body nejaky stovky/200) (i carky) = 0.1, pokud je to 0 nebo 1 tak 0.15
+        - HELCA: konkretni slovo, delsi nez 3 chary (15 a vickrat) = 0.1, ke kazdymu dalsimu nasobit 1.5
+        - NELA: caps lock v nazvu (vic nez cca jedno slovo) = 0.015
+        - NELA: pocet slov caps lockem - 2 - 5 = 0.15, vice jak 6 0.25
     - lists: (dictionary pro hodnotu kazdyho slova)
-        + rozdelit kategorie (jedno free je ok, jedna sexy single ne)
-        - domeny projet podle dict 
+        - HELCA: vsechny dicts do separate funkci podle zavaznosti
+        - NELA: domeny projet podle dict 
     - vlasnosti:
-        - mezi 1 a 5 rano je divny = 0.1 
-        - jazyk (?) pokud by nebylo anglicky, hledat znaky = pokud tam nejakej je, tak 0.2
-        - projet odkazy podle dict, final check
+        - NELA: mezi 1 a 5 rano je divny = 0.1 
+        - NELA: jazyk (?) pokud by nebylo anglicky, hledat znaky = pokud tam nejakej je, tak 0.2
+        - NELA: projet odkazy podle dict, final check
     - specificky pro html:
-        - barvy: pocet (5+ mimo cerna, bila), typ bila/cerna/other = 0.1 (jestli to pujde)
-
+        - HELCA: barvy: pocet (5+ mimo cerna, bila), typ bila/cerna/other = 0.1 (jestli to pujde)
     - pozitivni vlastnosti:
-        - in-reply-to: -automaticky HAM
-        - pozitivni slova (newsletter)
+        - HELCA: in-reply-to: - automaticky HAM
+        - HELCA: pozitivni slova (newsletter) - odecist 0.3
 
 
 moznosti pro ucici filter:
@@ -45,4 +44,3 @@ moznosti pro ucici filter:
     - pokud ma email spam skore pres [neco], tak vsechny dalsi emaily zarad do spamu automaticky
     - pokud ma email spam skore pod [neco], tak vsechny dalsi automaticky nejsou spam
     - pokud se nejaky slovo v jednom emailu objevi vic nez 15x tak ho zarad do listu spam keywords
-    - dalsi...?
