@@ -1,17 +1,11 @@
-
-- vypracovat vsechny dicts co potrebujem z README
-- prepsat penalties z README do modulu do vars
+- HELCA: udelat script na porovnani co mame spatne, se spam likelihood, nahore co je FP potom FN (pridat i do predictions)
+- HELCA: updatenout tokenizaci emailu in-reply-to: automaticky neni spam
+- BOTH: prubezne pripisovat penalties do vars, dodelavat dictionaries na zaklade spam emailu, nezapomenout na lower()
 - udelat vsechny testy co jsou ten base level (pokracovat s tema funkcema co nela zacala)
-    - opakovaci
-    - blizko u sebe
-    - vsechny dicts (kazdej bereme trosku jinak)
-    - vlastnosti
-    - html specific vlastnosti
-    - uplne naposledy se rozhodnout podle odkazu
-- udelat script kterej testuje filtr (skoro mame?)
-- funkcne naimplementovat NEucici se filter, at mame zaklad
-- vytvorit ucici se funkce podle README 
-- funkcne naimplementovat ucici se filter additional
+
+- neucici se filter aspon na 50% 
+- vytvorit ucici se funkce
+- funkcne naimplementovat ucici se filter
 
 
 latest zmeny: 

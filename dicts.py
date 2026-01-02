@@ -10,7 +10,12 @@ ABBREVIATION = {"a.m", "p.m", "P.S", "e.g", "i.e", "N.B", "q.v"}
 
 
 # sexy singles explicit atd. = vadi 1 a vic, 0.2 per each
-EXPLICIT = {"sexy", "single", "singles", "hot"}
+EXPLICIT = {"sexy", "sex", "porn", "single", "singles", "hot", "freaky", "adult",
+            "slut", "sluts", "whore", "nude", "girlfriend", "boyfriend"}
+# cams, sneaky, hidden
+# hledat v odkazech jakykoliv
+
+AGRESSION = {"war", "crime", "protect", "protected", "criminal", "protecting"}
 
 # nejcastejsich 60 slov v anglictine podle wikipedie
 IGNORED = {"the", "be", "to", "of", "and", "a", "in", "that", "have", "i", 
@@ -23,15 +28,35 @@ IGNORED = {"the", "be", "to", "of", "and", "a", "in", "that", "have", "i",
 
 # reklama/money of some sort: free, penize, cena, kvalita, sleva, dollars... 
 # 5 a vic uz je bad, nasobit 1.2 pak u kazdyho dalsiho
-MONEY = {"free", "money", "sale", "gift", "dollar", "dollars", "USD", "million"}
+MONEY = {"free", "money", "sale", "gift", "dollar", "dollars", "USD", "million", 
+        "insurance", "rate", "rates", "click", "pay", "financial", "savings", "save",
+        "affordable", "company", "companies", "value", "quote", "merchant", "debt",
+        "credit", "debit", "virus", "income", "wealth", "marketing", "pricing", "price",
+        "cash", "fee", "offer", "ad"}
 
 # divny countries typu Hawaii, Uganda nevim = jakejkoliv mention 0.1
 # nevim jaky vsechny zaradit, zkusim najit nejaky lists
 COUNTRIES = {"Uganda", "Hawaii", "Nigeria", "Morocco"} 
+#japan
 
 URGENCY = {"please", "give", "send", "beg", "begging", "urgent", "important", 
-           "crucial", "immediately", "asap", "soon", "need"}
+           "crucial", "immediately", "asap", "soon", "need", "minute", "minutes"
+           "safety", "chance", "help", "needs"}
+# employemnt? job offers?
+
 # urgency, prosby, requests, time left etc. = 2 (3?) a vic uz je bad, 0.05
+
+SECURITY = {}
 
 GOOD_DOMAINES = {"gmail.com"} #lol actuall nevim :3
 # duveryhodny domeny po @ [+ body pokud je to neco jinyho, country codes] = 0.2 za divnou domenu
+
+BAD_DOMAINES = {
+}
+#cisla pred @
+web.de
+mailexcote.com
+aol.com
+playful.com
+bluemail.dk
+#newsletter ?

@@ -3,3 +3,8 @@ TOO_MANY_CAPS_PENALTY = 0.15
 MISSING_CAPITALISATION_PENALTY =  0.15
 MISSING_SPACE_PENALTY = 0.05
 WEIRD_TIME_PENALTY = 0.1
+DICT_SEXY = 0.2 #vadi i jen jedno
+DICT_MONEY = 0.05  # 3 a pak dalsi 0.05 each
+DICT_COUNTRIES = 0.1 #za jakykoliv
+DICT_URGENT = 0.05 # jedno ok, 2 a vic uz 0.05 each
+
