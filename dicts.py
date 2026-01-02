@@ -14,6 +14,7 @@ EXPLICIT = {"sexy", "sex", "porn", "single", "singles", "hot", "freaky", "adult"
             "slut", "sluts", "whore", "nude", "girlfriend", "boyfriend"}
 # cams, sneaky, hidden
 # hledat v odkazech jakykoliv
+NOT_EXPLICIT = {"hotmail"}
 
 AGRESSION = {"war", "crime", "protect", "protected", "criminal", "protecting"}
 
@@ -54,9 +55,9 @@ GOOD_DOMAINES = {"gmail.com"} #lol actuall nevim :3
 BAD_DOMAINES = {
 }
 #cisla pred @
-web.de
-mailexcote.com
-aol.com
-playful.com
-bluemail.dk
+#web.de
+#mailexcote.com
+#aol.com
+#playful.com
+#bluemail.dk
 #newsletter ?

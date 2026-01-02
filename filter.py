@@ -12,6 +12,10 @@ SPAM_TAG = "SPAM"
 HAM_TAG = "OK"
 
 SPAM_THRESHOLD = 0.6
+CAPS_THRESHOLD_1 = 2 #vcetne
+CAPS_THRESHOLD_2 = 6 #vcetne
+SUS_TIME_INTERVAL = 1, 5
+
 
 class MyFilter:
     def __init__(self):
@@ -33,16 +37,21 @@ class MyFilter:
             self.spam_likelihood = 0 #reset u kazdeho mailu
             if self.general_or_html(true_body):
                 # TODO: add html specific checks here
+                self.check_domains(true_body, sender_email)
                 true_body = self.normalise_html_body(true_body) # strip do normalni podoby pro basic checks\
 
             self.check_double_inter(true_body)
-            self.check_caps(true_body)
+            self.check_caps(subject, 7) 
             self.check_sentence_end(true_body)
             self.check_comma_spaces(true_body)
+            self.check_time(time_sent)
+            self.check_capitalised_words(true_body)
+            self.check_non_ascii_chars(subject, true_body)
+            self.check_sender_chars(sender_email)
             # TODO tu dalsi kontroly...
             # ...
             #if 
-            print(self.spam_likelihood) # < pak vymazat
+            #print(self.spam_likelihood) # < pak vymazat
             self.prediction[file] = self.decide_if_spam_and_tag(self.spam_likelihood)
 
     def decide_if_spam_and_tag(self, likelihood):
@@ -141,16 +150,39 @@ class MyFilter:
                 
                 ch_index += 1
     
-    def check_caps(self, body):
+    def check_caps(self, string, max_allowed): # ted pouzit pro kontrolu predmetu
         caps_counter = 0
-        for i in range(len(body)):
-            if body[i].isupper():
+        for i in range(len(string)):
+            if string[i].isupper():
                 caps_counter += 1
-            elif body[i].isspace() is False:
-                caps_counter = 0
-            if (caps_counter > 20):
-                self.spam_likelihood += ps.TOO_MANY_CAPS_PENALTY
-                caps_counter = 0
+
+            if (caps_counter > max_allowed):
+                self.spam_likelihood += ps.TOO_MANY_CAPS_PENALTY # per cap
+                #caps_counter = 0
+
+    def check_capitalised_words(self, body):
+        words = body.split()
+        w_count = 0
+
+        for w in words:
+            t_w = w.strip(".,")
+
+            if w.isupper() and len(t_w) > 3: # slova do 3 jsou pravdepodobne zkratky
+                w_count += 1
+                if w_count >= CAPS_THRESHOLD_2:
+                    self.spam_likelihood += ps.CAP_WORDS_BIG_PENALTY
+                elif w_count >= CAPS_THRESHOLD_1:
+                    self.spam_likelihood += ps.CAP_WORDS_SMALL_PENALTY
+
+
+    def check_time(self, time):
+        if time[0] == "0" and SUS_TIME_INTERVAL[0] <= int(time[1]) < SUS_TIME_INTERVAL[1]:
+            self.spam_likelihood += ps.WEIRD_TIME_PENALTY
+
+    def check_non_ascii_chars(self, subject, body):
+        if not subject.isascii() or not body.isascii():
+            self.spam_likelihood + ps.NON_ASCII_PENALTY
+
 
 
     def check_sentence_end(self, body): # kontroluje jestli je na konci vety mezera a velke pismeno
@@ -191,7 +223,42 @@ class MyFilter:
                     self.spam_likelihood += ps.MISSING_SPACE_PENALTY
                 ch_index += 1
 
-        
+    def check_domains(self, body, sender):
+        words = body.split()
+        links = []
+
+        for w in words:
+            if w.startswith("www.") or w.startswith("http"):
+                links.append(w)
+
+        for not_exp in ds.NOT_EXPLICIT:  
+            # at ignoruje napr. hotmail, score se nam ale zhorsilo po teto zmene lol...mozna zkontrolovat znova az budem mit zbytek kontrol
+            #TODO jen pripadna kontrola ^
+            sender = sender.replace(not_exp, "")
+
+        for explicit in ds.EXPLICIT:
+            if explicit in sender:
+                self.spam_likelihood += ps.SEXY_SENDER_PENALTY
+            for l in links:
+                if explicit in l:
+                    self.spam_likelihood += ps.SEXY_LINK_PENALTY
+
+        for money in ds.MONEY:
+            if money in sender:
+                self.spam_likelihood += ps.MONEY_SENDER_PENALTY
+            for l in links:
+                if money in l:
+                    self.spam_likelihood += ps.MONEY_LINK_PENALTY
+
+
+    def check_sender_chars(self, sender):
+        if not sender.isascii():
+            self.spam_likelihood += ps.SENDER_NON_ASCII_PENALTY
+        for ch in range(len(sender)):
+            if sender[ch].isnumeric():
+                self.spam_likelihood += ps.SENDER_NUMBER_PENALTY
+
+
                     
 
 
@@ -199,7 +266,7 @@ class MyFilter:
 if __name__ == "__main__":
     filter = MyFilter()
     base_dir = os.path.dirname(os.path.abspath(__file__))
-    path = os.path.join(base_dir, "spamfilter-data", "1")
+    path = os.path.join(base_dir, "spamfilter-data", "2")
     filter.test(path) #testovani na mini corpusu
-    quality_score = quality.compute_quality_for_corpus(os.path.join(base_dir, "spamfilter-data", "1"))
+    quality_score = quality.compute_quality_for_corpus(os.path.join(base_dir, "spamfilter-data", "2"))
     print(quality_score)
