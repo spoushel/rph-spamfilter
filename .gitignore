@@ -2,3 +2,5 @@ __pycache__/
 
 spamfilter-data/*/\!better_res.txt
 spamfilter-data/*/\!prediction.txt
+spamfilter-data/1/!score_analysed.txt
+spamfilter-data/1/!prediction.txt
