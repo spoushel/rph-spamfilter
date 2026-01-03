@@ -49,11 +49,11 @@ def create_better_results(path_to_corpus):
         f_out.write("\n")
         for k in wrong_spam:
             s = float(scores.get(k, 0.0))
-            f_out.write(f"{k} | score: {s:.3f} | wrong: SPAM\n")
+            f_out.write(f"{k} | score: {s:.3f} | wrong: SPAM, ma byt: OK\n")
         f_out.write("\n")
         for k in wrong_ok:
             s = float(scores.get(k, 0.0))
-            f_out.write(f"{k} | score: {s:.3f} | wrong: OK\n")
+            f_out.write(f"{k} | score: {s:.3f} | wrong: OK, ma byt: SPAM\n")
     
 
 if __name__ == "__main__":

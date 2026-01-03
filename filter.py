@@ -45,11 +45,12 @@ class MyFilter:
             self.check_newsletter(subject, true_body)
             #dict checks
             self.check_dict(true_body, ds.EXPLICIT, ps.DICT_EXPLICIT, ps.NUM_EXPLICIT)
+            self.check_dict(true_body, ds.EXPLICIT_S, ps.DICT_EXPLICIT_S, ps.NUM_EXPLICIT_S)
             self.check_dict(true_body, ds.COUNTRIES, ps.DICT_COUNTRIES, ps.NUM_COUNTRIES)
             self.check_dict(true_body, ds.AGRESSION, ps.DICT_AGRESSION, ps.NUM_AGRESSION)
             self.check_dict(true_body, ds.MONEY, ps.DICT_MONEY, ps.NUM_MONEY)
             self.check_dict(true_body, ds.URGENCY, ps.DICT_URGENT, ps.NUM_URGENT)
-
+            self.check_dict(true_body, ds.GOOD_WORDS, ps.GOOD_BONUS, ps.NUM_GOOD)
 
             
             if reply_flag == True:
@@ -104,7 +105,8 @@ class MyFilter:
                 for word in line.split():
                     if ':' in word:
                         time_sent = word
-            if line.startswith("in-reply-to:"): #or line.startswith("References:") or line.startswith("Reply-To:") 
+            low = line.lower()
+            if low.startswith("in-reply-to:"): #or line.startswith("References:") or line.startswith("Reply-To:") 
                 reply_flag = True
 
 
@@ -161,9 +163,9 @@ class MyFilter:
             if string[i].isupper():
                 caps_counter += 1
 
-            excess = caps_counter - max_allowed
-            if excess > 0:
-                self.spam_likelihood += ps.TOO_MANY_CAPS_PENALTY * excess 
+        excess = caps_counter - max_allowed
+        if excess > 0:
+            self.spam_likelihood += ps.TOO_MANY_CAPS_PENALTY * excess 
 
     def check_capitalised_words(self, body):
         words = body.split()

@@ -21,7 +21,6 @@ STRATEGIE:
     - pocet/opakovani overall: 
         *- HELCA: dlouhy vety bez tecek: vic nez 200 znaku mezi teckama (nebrat carky) = zadny 0.10, jinak each 0.05
         *- HELCA: chybi interpunkce skoro kompletne (delka chars body nejaky stovky/200) (i carky) = 0.1
-        - ?nechat na training? HELCA: konkretni slovo, delsi nez 3 chary (15 a vickrat) = 0.1, ke kazdymu dalsimu nasobit 1.5
         *- NELA: caps lock v nazvu (vic nez cca jedno slovo) = 0.015 
         *- NELA: pocet slov caps lockem - 2 - 5 = 0.15, vice jak 6 0.25
     - lists: (dictionary pro hodnotu kazdyho slova)
@@ -39,7 +38,8 @@ STRATEGIE:
 
 
 moznosti pro ucici filter:
-    - hodne jich je odeslanych ze stejne adresy: asi je to spam adresa
-    - pokud ma email spam skore pres [neco], tak vsechny dalsi emaily zarad do spamu automaticky
-    - pokud ma email spam skore pod [neco], tak vsechny dalsi automaticky nejsou spam
-    - pokud se nejaky slovo v jednom emailu objevi vic nez 15x tak ho zarad do listu spam keywords
+    -? pokud ma email spam skore pres [neco], tak vsechny dalsi emaily zarad do spamu automaticky
+    - pokud maj aspon tri email spam skore pod [neco], tak vsechny dalsi automaticky nejsou spam (CNET?)
+    - dicts spatnych slov a dobrych slov
+        - slova ktery jsou hlavne ve spamu + kolikrat a v ok zpravach ne : pak s nima pracovat jako s tema dalsima
+    - nejlepsi kombinace hodnot

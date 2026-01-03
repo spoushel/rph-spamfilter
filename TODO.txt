@@ -1,13 +1,15 @@
-- BOTH: prubezne pripisovat penalties do vars, dodelavat dictionaries na zaklade spam emailu, nezapomenout na lower()
-- !BOTH: rozdeleny, udelat vsechny testy co jsou ten base level (pokracovat s tema funkcema co nela zacala)
-- v 16 sobota nejpozdejs zavolat :3 :
-    - idealne budou vsechny funkce uz fungovat
-    - testovat a spolu koukat co nam nefunguje 
-    - domluvit se ohledne uciciho filtru, zatim asi hlavne o to aby tam trochu neco bylo
+CIL: NAD 0.7
 
-- neucici se filter aspon na 50% 
-- vytvorit ucici se funkce
-- funkcne naimplementovat ucici se filter
+CURRENT MAX: 0.563117
+
+- HELCA: script/funkce co ukaze jak se to hodnoceni tvorilo
+- NELA: hodne procent test?
+- NELA: urgent do filtrovani subjectu, separatne good slova do domen (napr newsletter, edu)
+- NELA: caps procenta delky pocet slov/pocet capped slov
+- BOTH: linux nerd slova dodelat
+- HELCA: pokud ma mail pres nejakou delku / naopak pokud je kratsi nez neco
+- NELA: zacit ucici se funkce
+
 
 
 latest zmeny: 
@@ -15,9 +17,7 @@ latest zmeny:
 - presunula jsem penalties a dicts do modulu jako ps a ds
 - novy functions rozliseni general a html, html normalised body
 - zacala jsem ty dicts
-
 - testovani kapitalizace na zacatku vety a mezery po znamenkach
 - vytvoreni !prediction.txt
-
 - udelat script na porovnani co mame spatne, se spam likelihood, nahore co je FP potom FN (pridat i do predictions)
 - updatenout tokenizaci emailu in-reply-to: automaticky neni spam
