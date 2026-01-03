@@ -2,11 +2,11 @@ INTERPUNCTION = {".", ",", "?", "!", ";"}
 
 ABBREVIATION = {"a.m", "p.m", "P.S", "e.g", "i.e", "N.B", "q.v"}
 
-EXPLICIT = {"sexy", "sex", "porn", "single", "singles", "hot", "freaky", "adult",
-            "slut", "sluts", "whore", "nude"}
+EXPLICIT = {"sexy", "sex", "porn", "single", "singles", "freaky", "adult",
+            "slut", "sluts", "whore", "nude", "sexual",}
 
-EXPLICIT_S = {"girlfriend", "boyfriend", "cigarettes", "cigarette", "tobacco", 
-                "alcohol", "cams", "sneaky", "fat", "sexual", "diet", "dieting", "wrinkle", "weight"}
+EXPLICIT_S = {"girlfriend", "boyfriend", "cigarettes", "cigarette", "tobacco", "hot"
+                "alcohol", "cams", "sneaky", "fat", "diet", "dieting", "wrinkle", "weight"}
 
 NOT_EXPLICIT = {"hotmail"}
 
@@ -36,3 +36,5 @@ URGENCY = {"please", "give", "send", "beg", "begging", "urgent", "important",
 
 GOOD_WORDS = {"java", "linux", "c++", "thanks", "javascript", "tech"
               "intel", "techs", "windows", "CNET", "IT", "news", "edu"}
+
+TRUSTED_DOMAINS = {".edu", ".gov", ".mil",  ".int"}

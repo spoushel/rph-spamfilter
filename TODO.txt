@@ -1,11 +1,15 @@
 CIL: NAD 0.7
 
-CURRENT MAX: 0.563117
+LAST MAX: 0.563117
+pridane trusted domains: 0.583710
+opravena chyba v special_punc_case: 0.625616 (druha sada v tyhle chvili 0.552)
+CURRENT MAX: 0.633005
 
 - HELCA: script/funkce co ukaze jak se to hodnoceni tvorilo
-- NELA: hodne procent test?
-- NELA: urgent do filtrovani subjectu, separatne good slova do domen (napr newsletter, edu)
-- NELA: caps procenta delky pocet slov/pocet capped slov
+*- NELA: hodne procent test?
+*- NELA: urgent do filtrovani subjectu, 
+*- NELA: separatne good slova do domen (napr newsletter, edu)
+*- NELA: caps procenta delky pocet slov/pocet capped slov
 - BOTH: linux nerd slova dodelat
 - HELCA: pokud ma mail pres nejakou delku / naopak pokud je kratsi nez neco
 - NELA: zacit ucici se funkce

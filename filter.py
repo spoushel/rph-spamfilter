@@ -43,6 +43,10 @@ class MyFilter:
             self.check_non_ascii_chars(subject, true_body)
             self.check_sender_chars(sender_email)
             self.check_newsletter(subject, true_body)
+            self.check_subject(subject)
+            #self.check_sus_char(true_body, "%", ps.TOO_MANY_PERC_CHAR_PENALTY, ps.PERC_CHAR_THRESHOLD)
+            # ^ lehce zhorsuje skore (o 0.003 v prvni sade, o 0.14 v druhe sade)
+
             #dict checks
             self.check_dict(true_body, ds.EXPLICIT, ps.DICT_EXPLICIT, ps.NUM_EXPLICIT)
             self.check_dict(true_body, ds.EXPLICIT_S, ps.DICT_EXPLICIT_S, ps.NUM_EXPLICIT_S)
@@ -52,6 +56,8 @@ class MyFilter:
             self.check_dict(true_body, ds.URGENCY, ps.DICT_URGENT, ps.NUM_URGENT)
             self.check_dict(true_body, ds.GOOD_WORDS, ps.GOOD_BONUS, ps.NUM_GOOD)
 
+            if not reply_flag:
+                reply_flag = self.is_trusted_domain(sender_email)
             
             if reply_flag == True:
                     self.spam_likelihood = 0 #reset pokud je to reply (100% sure ze je to ok)
@@ -123,10 +129,10 @@ class MyFilter:
             return True
         if word.find("@") != -1: # emailovy adresy
             return True
-        for i in range(len(word)): # datum, cas, vse s cisly
-            if (not word[i].isnumeric()) and (word[i] not in ds.INTERPUNCTION):
+        for ch in word: # datum, cas, vse s cisly
+            if (not ch.isnumeric()) and (ch not in ds.INTERPUNCTION):
                 break
-            if i == range(len(word)):
+        else:
                 return True
         
         return False
@@ -143,6 +149,27 @@ class MyFilter:
         return body[char_index]  
     
     ## ACTUAL TESTY
+
+    def check_subject(self, subject):
+
+        for word in ds.AGRESSION:
+            if word in subject:
+                self.spam_likelihood += ps.SUBJECT_AGRESSION_PENALTY
+        for word in ds.EXPLICIT:
+            if word in subject:
+                self.spam_likelihood += ps.SUBJECT_EXPLICIT_PENALTY
+        for word in ds.EXPLICIT_S:
+            if word in subject:
+                self.spam_likelihood += ps.SUBJECT_EXPLICIT_S_PENALTY
+        for word in ds.URGENCY:
+            if word in subject:
+                self.spam_likelihood += ps.SUBJECT_URGENT_PENALTY
+
+
+    def check_sus_char(self, body, char, threshold, penalty): # konkretne pro %, mozna prijdem na vice pouziti...
+        if body.count(char) >= threshold:
+            self.spam_likelihood += penalty
+
 
     def check_double_inter(self, body):
         for p in ds.INTERPUNCTION:
@@ -169,17 +196,24 @@ class MyFilter:
 
     def check_capitalised_words(self, body):
         words = body.split()
-        w_count = 0
+        cw_count = 0
+        total_count = len(words)
+        if total_count >= ps.WORDS_FOR_THRESHOLD_MULTIPLIER:
+            thr_multiplier = 2
+        else:
+            thr_multiplier = 1 
 
         for w in words:
             t_w = w.strip(".,")
 
             if w.isupper() and len(t_w) > 3: # slova do 3 jsou pravdepodobne zkratky
-                w_count += 1
+                cw_count += 1
 
-        if w_count >= ps.CAPS_THRESHOLD_2:
+        if cw_count >= ps.CAPS_THRESHOLD_2 * thr_multiplier:
+            #print("first: " + str(total_count))
             self.spam_likelihood += ps.CAP_WORDS_BIG_PENALTY
-        elif w_count >= ps.CAPS_THRESHOLD_1:
+        elif cw_count >= ps.CAPS_THRESHOLD_1 * thr_multiplier:
+            #print("second: " + str(total_count))
             self.spam_likelihood += ps.CAP_WORDS_SMALL_PENALTY
 
 
@@ -256,6 +290,19 @@ class MyFilter:
                 if money in l:
                     self.spam_likelihood += ps.MONEY_LINK_PENALTY
 
+        for good in ds.GOOD_WORDS:
+            for l in links:
+                if good in l:
+                    self.spam_likelihood += ps.GOOD_BONUS
+
+        
+
+
+    def is_trusted_domain(self, sender):
+        for dom in ds.TRUSTED_DOMAINS:
+            if sender.endswith(dom):
+                return True
+        return False
 
     def check_sender_chars(self, sender):
         if not sender.isascii():
