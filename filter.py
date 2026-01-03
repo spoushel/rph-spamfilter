@@ -1,45 +1,39 @@
-#FINALNI IMPORTANT FILE !!!
 import email
+import confmat
 import quality
 import corpus
-import confmat
 import os
 import dicts as ds
 import penalties as ps
 import re
+import sys
 
 SPAM_TAG = "SPAM"
 HAM_TAG = "OK"
-
-SPAM_THRESHOLD = 0.6
-CAPS_THRESHOLD_1 = 2 #vcetne
-CAPS_THRESHOLD_2 = 6 #vcetne
-SUS_TIME_INTERVAL = 1, 5
-
 
 class MyFilter:
     def __init__(self):
         self.spam_likelihood = 0
         self.prediction = {}
+        self.scores = {}
         
     def train(self, path_to_training_data): #adresar musi obsahovat !truth
         pass
-        #Vytvoření a nastavení vnitřních datových struktur třídy, aby byly později využitelné metodou test()
     def test(self, path_to_corpus): # adresar s emails BEZ !truth
         corp = corpus.Corpus(path_to_corpus)
         self.cycle_emails(corp)
         self.create_prediction_file(self.prediction, path_to_corpus)
-        #output nic
     
     def cycle_emails(self, corp):
         for file, raw in corp.emails():
-            sender_email, time_sent, subject, true_body = self.parse_email(raw)
+            sender_email, time_sent, subject, true_body, reply_flag = self.parse_email(raw)
             self.spam_likelihood = 0 #reset u kazdeho mailu
             if self.general_or_html(true_body):
-                # TODO: add html specific checks here
+                self.check_html_colours(true_body)
                 self.check_domains(true_body, sender_email)
-                true_body = self.normalise_html_body(true_body) # strip do normalni podoby pro basic checks\
-
+                true_body = self.normalise_html_body(true_body) # strip do normalni podoby pro basic checks
+            #TODO helca stuffs
+            self.check_num_interpunction(true_body)
             self.check_double_inter(true_body)
             self.check_caps(subject, 7) 
             self.check_sentence_end(true_body)
@@ -48,18 +42,27 @@ class MyFilter:
             self.check_capitalised_words(true_body)
             self.check_non_ascii_chars(subject, true_body)
             self.check_sender_chars(sender_email)
-            # TODO tu dalsi kontroly...
-            # ...
-            #if 
-            #print(self.spam_likelihood) # < pak vymazat
+            self.check_newsletter(subject, true_body)
+            #dict checks
+            self.check_dict(true_body, ds.EXPLICIT, ps.DICT_EXPLICIT, ps.NUM_EXPLICIT)
+            self.check_dict(true_body, ds.COUNTRIES, ps.DICT_COUNTRIES, ps.NUM_COUNTRIES)
+            self.check_dict(true_body, ds.AGRESSION, ps.DICT_AGRESSION, ps.NUM_AGRESSION)
+            self.check_dict(true_body, ds.MONEY, ps.DICT_MONEY, ps.NUM_MONEY)
+            self.check_dict(true_body, ds.URGENCY, ps.DICT_URGENT, ps.NUM_URGENT)
+
+
+            
+            if reply_flag == True:
+                    self.spam_likelihood = 0 #reset pokud je to reply (100% sure ze je to ok)
+            self.scores[file] = self.spam_likelihood #pro better_res script
             self.prediction[file] = self.decide_if_spam_and_tag(self.spam_likelihood)
 
     def decide_if_spam_and_tag(self, likelihood):
-        if likelihood >= SPAM_THRESHOLD:
+        if likelihood >= ps.SPAM_THRESHOLD:
             return SPAM_TAG
         return HAM_TAG
 
-    def create_prediction_file(self, dictionary, corpus_path): #TODO vytvori txt soubor z dict
+    def create_prediction_file(self, dictionary, corpus_path): 
         with open(os.path.join(corpus_path, "!prediction.txt"), "w") as f:
             for key in dictionary.keys():
                 f.write(key + " " + dictionary[key] +"\n")
@@ -76,6 +79,7 @@ class MyFilter:
 
     def parse_email(self, body): #vrati [sender email, time sent, subject, true body]
         sender_email, time_sent, subject, true_body = "", "", "", ""
+        reply_flag = False
 
         text = body.replace("\r\n", "\n").replace("\r", "\n")
         lines = text.split("\n")
@@ -100,9 +104,12 @@ class MyFilter:
                 for word in line.split():
                     if ':' in word:
                         time_sent = word
+            if line.startswith("in-reply-to:"): #or line.startswith("References:") or line.startswith("Reply-To:") 
+                reply_flag = True
+
 
         true_body = "\n".join(lines[body_start_idx:]).lstrip("\n")
-        return [sender_email, time_sent, subject, true_body]
+        return [sender_email, time_sent, subject, true_body, reply_flag]
     
 
     def special_punc_case(self, whole_string, punc_index):
@@ -132,8 +139,6 @@ class MyFilter:
             index_counter = body_end + 1 # 1 kvuli mezere
         
         return body[char_index]  
-
-
     
     ## ACTUAL TESTY
 
@@ -156,9 +161,9 @@ class MyFilter:
             if string[i].isupper():
                 caps_counter += 1
 
-            if (caps_counter > max_allowed):
-                self.spam_likelihood += ps.TOO_MANY_CAPS_PENALTY # per cap
-                #caps_counter = 0
+            excess = caps_counter - max_allowed
+            if excess > 0:
+                self.spam_likelihood += ps.TOO_MANY_CAPS_PENALTY * excess 
 
     def check_capitalised_words(self, body):
         words = body.split()
@@ -169,21 +174,20 @@ class MyFilter:
 
             if w.isupper() and len(t_w) > 3: # slova do 3 jsou pravdepodobne zkratky
                 w_count += 1
-                if w_count >= CAPS_THRESHOLD_2:
-                    self.spam_likelihood += ps.CAP_WORDS_BIG_PENALTY
-                elif w_count >= CAPS_THRESHOLD_1:
-                    self.spam_likelihood += ps.CAP_WORDS_SMALL_PENALTY
+
+        if w_count >= ps.CAPS_THRESHOLD_2:
+            self.spam_likelihood += ps.CAP_WORDS_BIG_PENALTY
+        elif w_count >= ps.CAPS_THRESHOLD_1:
+            self.spam_likelihood += ps.CAP_WORDS_SMALL_PENALTY
 
 
     def check_time(self, time):
-        if time[0] == "0" and SUS_TIME_INTERVAL[0] <= int(time[1]) < SUS_TIME_INTERVAL[1]:
+        if time[0] == "0" and ps.SUS_TIME_INTERVAL[0] <= int(time[1]) < ps.SUS_TIME_INTERVAL[1]:
             self.spam_likelihood += ps.WEIRD_TIME_PENALTY
 
     def check_non_ascii_chars(self, subject, body):
         if not subject.isascii() or not body.isascii():
-            self.spam_likelihood + ps.NON_ASCII_PENALTY
-
-
+            self.spam_likelihood += ps.NON_ASCII_PENALTY
 
     def check_sentence_end(self, body): # kontroluje jestli je na konci vety mezera a velke pismeno
         ch_index = 0
@@ -258,15 +262,92 @@ class MyFilter:
             if sender[ch].isnumeric():
                 self.spam_likelihood += ps.SENDER_NUMBER_PENALTY
 
+    def check_newsletter(self, subject, body):
+        words_sub = subject.split()
+        words_body = body.split()
 
-                    
+        for w in (words_sub + words_body):
+            t_w = w.strip(".,!?").lower()
+            if t_w in ds.GOOD_WORDS:
+                self.spam_likelihood -= ps.GOOD_BONUS
+                break
+    
+    def check_html_colours(self, body):
+        matches_hex = re.findall(r"#[0-9a-fA-F]{6}(?![0-9a-fA-F])", body)
+        ignored_hex = {"#000000", "#ffffff", "#cccccc"}
+        filtered_matches = {m.lower() for m in matches_hex} - ignored_hex
+
+        if len(filtered_matches) > 5:
+            self.spam_likelihood += ps.HTML_COLOURS_PENALTY
+
+    # dictionaries
+
+    def check_dict(self, body, DICT, PENALTY, PEN_NUM):
+        count = 0
+        words = [w.strip(".,!?").lower() for w in body.split()]
+
+        for w in words:
+            if w in DICT:
+                count += 1
+
+        if DICT in (ds.MONEY, ds.URGENCY):
+            excess = count - PEN_NUM
+            if excess > 0:
+                self.spam_likelihood += excess * PENALTY
+        elif count >= PEN_NUM:
+            self.spam_likelihood += PENALTY
+
+    def check_num_interpunction(self, body):
+        l = len(body)
+        total = 0
+        for p in ds.INTERPUNCTION:
+            ch_index = 0
+            while True:
+                ch_index = body.find(p, ch_index)
+                if ch_index == -1:
+                    break
+                total += 1
+                ch_index += 1
+        threshold = max(1, l // 200)
+        if total < threshold:
+            self.spam_likelihood += ps.LITTLE_INTERPUNCTION_PENALTY
+
+    def check_interpunction_gaps(self, body):
+        positions = []
+        for p in ds.INTERPUNCTION:
+            ch_index = 0
+            while True:
+                ch_index = body.find(p, ch_index)
+                if ch_index == -1:
+                    break
+                positions.append(ch_index)
+                ch_index += 1
+
+        positions.sort()
+
+        if not positions:
+            if len(body) > 200:
+                self.spam_likelihood += ps.LITTLE_INTERPUNCTION_PENALTY
+            return
+
+        prev = positions[0]
+        for idx in positions[1:]:
+            if idx - prev > 200:
+                self.spam_likelihood += ps.LITTLE_INTERPUNCTION_PENALTY
+                break
+            prev = idx
 
 
 
 if __name__ == "__main__":
-    filter = MyFilter()
+    f = MyFilter()
     base_dir = os.path.dirname(os.path.abspath(__file__))
-    path = os.path.join(base_dir, "spamfilter-data", "2")
-    filter.test(path) #testovani na mini corpusu
-    quality_score = quality.compute_quality_for_corpus(os.path.join(base_dir, "spamfilter-data", "2"))
-    print(quality_score)
+    corpus_folder = sys.argv[1] if len(sys.argv) > 1 else "1"
+    corpus_dir = os.path.join(base_dir, "spamfilter-data", corpus_folder)
+
+    # run and write predictions
+    f.test(corpus_dir)  # ensure this calls cycle_emails and then create_prediction_file
+
+    # compute quality from the written files for consistency
+    q = quality.compute_quality_for_corpus(corpus_dir)
+    print(f"{q:.6f}")

@@ -1,0 +1,4 @@
+__pycache__/
+
+spamfilter-data/*/\!better_res.txt
+spamfilter-data/*/\!prediction.txt

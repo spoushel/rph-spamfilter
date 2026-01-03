@@ -8,15 +8,37 @@ WEIRD_TIME_PENALTY = 0.1
 NON_ASCII_PENALTY = 0.2
 SENDER_NON_ASCII_PENALTY = 0.35
 SENDER_NUMBER_PENALTY = 0.1 # per number
+HTML_COLOURS_PENALTY = 0.1
+GOOD_BONUS = 0.3
+LITTLE_INTERPUNCTION_PENALTY = 0.1
 
+#links a senders
 
 SEXY_SENDER_PENALTY = 1
 SEXY_LINK_PENALTY = 0.4
 MONEY_SENDER_PENALTY = 0.2
 MONEY_LINK_PENALTY = 0.1
 
-DICT_SEXY = 0.2 #vadi i jen jedno
-DICT_MONEY = 0.05  # 3 a pak dalsi 0.05 each
-DICT_COUNTRIES = 0.1 #za jakykoliv
-DICT_URGENT = 0.05 # jedno ok, 2 a vic uz 0.05 each
+#dictionaries (num je >=):
+
+#simple - je to tam, penalty
+DICT_EXPLICIT = 1
+NUM_EXPLICIT = 1
+DICT_COUNTRIES = 0.3
+NUM_COUNTRIES = 1 
+DICT_AGRESSION = 1
+NUM_AGRESSION = 2
+
+
+#slozity - je to tam x krat, dalsi se pridavaji
+DICT_MONEY = 0.05  
+NUM_MONEY = 4
+DICT_URGENT = 0.05 
+NUM_URGENT = 2
+
+#thresholds
+SPAM_THRESHOLD = 0.6
+CAPS_THRESHOLD_1 = 2 #vcetne
+CAPS_THRESHOLD_2 = 6 #vcetne
+SUS_TIME_INTERVAL = 1, 5
 

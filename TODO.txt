@@ -1,5 +1,3 @@
-- HELCA: udelat script na porovnani co mame spatne, se spam likelihood, nahore co je FP potom FN (pridat i do predictions)
-- HELCA: updatenout tokenizaci emailu in-reply-to: automaticky neni spam
 - BOTH: prubezne pripisovat penalties do vars, dodelavat dictionaries na zaklade spam emailu, nezapomenout na lower()
 - !BOTH: rozdeleny, udelat vsechny testy co jsou ten base level (pokracovat s tema funkcema co nela zacala)
 - v 16 sobota nejpozdejs zavolat :3 :
@@ -20,3 +18,6 @@ latest zmeny:
 
 - testovani kapitalizace na zacatku vety a mezery po znamenkach
 - vytvoreni !prediction.txt
+
+- udelat script na porovnani co mame spatne, se spam likelihood, nahore co je FP potom FN (pridat i do predictions)
+- updatenout tokenizaci emailu in-reply-to: automaticky neni spam

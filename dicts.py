@@ -2,18 +2,10 @@ INTERPUNCTION = {".", ",", "?", "!", ";"}
 
 ABBREVIATION = {"a.m", "p.m", "P.S", "e.g", "i.e", "N.B", "q.v"}
 
-
-# dictionary pro hodnotu kazdyho slova, jak moc ho penalizujem
-# vzit v potaz mnozstvi celkove
-# rozdelit kategorie (jedno free je ok, jedna sexy single ne)
-# list nejbeznejsich slov co nam neva = nevadi jakykoliv mnozstvi
-
-
-# sexy singles explicit atd. = vadi 1 a vic, 0.2 per each
 EXPLICIT = {"sexy", "sex", "porn", "single", "singles", "hot", "freaky", "adult",
-            "slut", "sluts", "whore", "nude", "girlfriend", "boyfriend"}
-# cams, sneaky, hidden
-# hledat v odkazech jakykoliv
+            "slut", "sluts", "whore", "nude", "girlfriend", "boyfriend", "cigarettes", 
+            "cigarette", "tobacco", "alcohol", "cams", "sneaky"}
+
 NOT_EXPLICIT = {"hotmail"}
 
 AGRESSION = {"war", "crime", "protect", "protected", "criminal", "protecting"}
@@ -27,37 +19,18 @@ IGNORED = {"the", "be", "to", "of", "and", "a", "in", "that", "have", "i",
            "which", "go", "me", "when", "make", "can", "like", "time", "no", 
            "just", "him", "know", "take"}
 
-# reklama/money of some sort: free, penize, cena, kvalita, sleva, dollars... 
-# 5 a vic uz je bad, nasobit 1.2 pak u kazdyho dalsiho
 MONEY = {"free", "money", "sale", "gift", "dollar", "dollars", "USD", "million", 
         "insurance", "rate", "rates", "click", "pay", "financial", "savings", "save",
         "affordable", "company", "companies", "value", "quote", "merchant", "debt",
         "credit", "debit", "virus", "income", "wealth", "marketing", "pricing", "price",
-        "cash", "fee", "offer", "ad"}
+        "cash", "fee", "fees", "offer", "ad", "lottery", "jackpot", "inheritance", "donation",
+        "bank", "transfer", "sales", "employment", "jon"}
 
-# divny countries typu Hawaii, Uganda nevim = jakejkoliv mention 0.1
-# nevim jaky vsechny zaradit, zkusim najit nejaky lists
-COUNTRIES = {"Uganda", "Hawaii", "Nigeria", "Morocco"} 
+COUNTRIES = {"Uganda", "Hawaii", "Nigeria", "Morocco", "Ghana", "Cameron", "Senegal", "prince", "king", "queen"} 
 #japan
 
 URGENCY = {"please", "give", "send", "beg", "begging", "urgent", "important", 
            "crucial", "immediately", "asap", "soon", "need", "minute", "minutes"
            "safety", "chance", "help", "needs"}
-# employemnt? job offers?
 
-# urgency, prosby, requests, time left etc. = 2 (3?) a vic uz je bad, 0.05
-
-SECURITY = {}
-
-GOOD_DOMAINES = {"gmail.com"} #lol actuall nevim :3
-# duveryhodny domeny po @ [+ body pokud je to neco jinyho, country codes] = 0.2 za divnou domenu
-
-BAD_DOMAINES = {
-}
-#cisla pred @
-#web.de
-#mailexcote.com
-#aol.com
-#playful.com
-#bluemail.dk
-#newsletter ?
+GOOD_WORDS = {"newsletter"}
