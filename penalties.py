@@ -54,4 +54,8 @@ CAPS_THRESHOLD_2 = 6 #vcetne
 SUS_TIME_INTERVAL = 1, 5
 PERC_CHAR_THRESHOLD = 30
 WORDS_FOR_THRESHOLD_MULTIPLIER = 500 #od kolika slov z mailu se nam posune threshold
+CAP_WORD_FRACTION = 0.1 # pokud je slov v caps vice jak tato cast ze vsech slov -> nasobena penalizace
 
+#training
+MIN_SCORE_FOR_NEW_WORD = 25
+PENALTY_TRAINED_MULTIPLIER = 0.005 # score je nasobeno timto cislem

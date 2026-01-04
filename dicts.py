@@ -2,11 +2,11 @@ INTERPUNCTION = {".", ",", "?", "!", ";"}
 
 ABBREVIATION = {"a.m", "p.m", "P.S", "e.g", "i.e", "N.B", "q.v"}
 
-EXPLICIT = {"sexy", "sex", "porn", "single", "singles", "freaky", "adult",
-            "slut", "sluts", "whore", "nude", "sexual",}
+EXPLICIT = {"sexy", "sex", "porn","freaky", "adult",
+            "slut", "sluts", "whore", "nude", "sexual", "dildo"}
 
 EXPLICIT_S = {"girlfriend", "boyfriend", "cigarettes", "cigarette", "tobacco", "hot"
-                "alcohol", "cams", "sneaky", "fat", "diet", "dieting", "wrinkle", "weight"}
+                "alcohol", "cams", "sneaky", "fat", "diet", "dieting", "wrinkle", "weight", "single", "singles"}
 
 NOT_EXPLICIT = {"hotmail"}
 
@@ -19,7 +19,7 @@ IGNORED = {"the", "be", "to", "of", "and", "a", "in", "that", "have", "i",
            "she", "or", "an", "will", "my", "one", "all", "would", "there",
            "their", "what", "so", "up", "out", "if", "about", "who", "get",
            "which", "go", "me", "when", "make", "can", "like", "time", "no", 
-           "just", "him", "know", "take"}
+           "just", "him", "know", "take", "is", "in", "you", "your", "are"}
 
 MONEY = {"free", "money", "sale", "gift", "dollar", "dollars", "USD", "million", 
         "insurance", "rate", "rates", "pay", "financial", "savings", "save",
@@ -35,6 +35,10 @@ URGENCY = {"please", "give", "send", "beg", "begging", "urgent", "important",
            "safety", "chance", "help", "needs"}
 
 GOOD_WORDS = {"java", "linux", "c++", "thanks", "javascript", "tech"
-              "intel", "techs", "windows", "CNET", "IT", "news", "edu"}
+              "intel", "techs", "windows", "CNET", "IT", "news", "edu", "daily", "news", "developement"}
 
 TRUSTED_DOMAINS = {".edu", ".gov", ".mil",  ".int"}
+
+#training dicts
+TRAINED_SPAM = {}
+TRAINED_HAM = {}

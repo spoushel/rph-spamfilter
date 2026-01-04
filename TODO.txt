@@ -3,7 +3,8 @@ CIL: NAD 0.7
 LAST MAX: 0.563117
 pridane trusted domains: 0.583710
 opravena chyba v special_punc_case: 0.625616 (druha sada v tyhle chvili 0.552)
-CURRENT MAX: 0.633005
+po merge: 0.674142
+CURRENT MAX: 0.674142
 
 - HELCA: script/funkce co ukaze jak se to hodnoceni tvorilo
 *- NELA: hodne procent test?
