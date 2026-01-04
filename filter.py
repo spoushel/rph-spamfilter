@@ -8,6 +8,7 @@ import penalties as ps
 import re
 import sys
 import utils
+import trained_dicts as td
 
 SPAM_TAG = "SPAM"
 HAM_TAG = "OK"
@@ -22,9 +23,12 @@ class MyFilter:
         self.all_logs = {}  # NEW: store logs per email ID
         self.trained_spam = {}
         self.trained_ham = {}
+        self.known_senders = {}
+        self.use_trained_dicts = True 
+        # ^ trained_dicts jsou z vzorovych dat, pokud je pouzivam a zaroven trenuji na vzorovych datech, tak pracuji dvakrat se stejnymi dicts
 
     def train(self, path_to_training_data): #adresar musi obsahovat !truth
-        spam_w, ham_w = self.get_dicts_from_training(path_to_training_data)
+        spam_w, ham_w, self.known_senders = self.get_dicts_from_training(path_to_training_data)
         self.trained_spam, self.trained_ham = self.compare_trained_dicts(spam_w, ham_w)
 
     def test(self, path_to_corpus): # adresar s emails BEZ !truth
@@ -67,7 +71,15 @@ class MyFilter:
             self.check_dict(true_body, ds.URGENCY, ps.DICT_URGENT, ps.NUM_URGENT)
             self.check_dict(true_body, ds.GOOD_WORDS, ps.GOOD_BONUS, ps.NUM_GOOD)
 
-            if (len(self.trained_spam) > 0):
+            self.check_known_sender(sender_email)
+
+            if self.use_trained_dicts: 
+                if self.spam_likelihood > ps.ALLOWENCE:
+                    self.check_dict_with_value(true_body, td.SPAM)
+                self.check_dict_with_value(true_body, td.HAM)
+
+
+            if (len(self.trained_spam) > 0) and self.spam_likelihood > ps.ALLOWENCE:
                 self.check_dict_with_value(true_body, self.trained_spam)
             if (len(self.trained_ham) > 0):
                 self.check_dict_with_value(true_body, self.trained_ham)
@@ -316,8 +328,6 @@ class MyFilter:
                 links.append(w)
 
         for not_exp in ds.NOT_EXPLICIT:  
-            # at ignoruje napr. hotmail, score se nam ale zhorsilo po teto zmene lol...mozna zkontrolovat znova az budem mit zbytek kontrol
-            #TODO jen pripadna kontrola ^
             sender = sender.replace(not_exp, "")
 
         for explicit in ds.EXPLICIT:
@@ -458,18 +468,32 @@ class MyFilter:
                 break  
             prev_pos = curr_pos
 
+    def check_length(self, body):
+        l = len(body)
+        if l < ps.LENGTH_THRESHOLD_SHORT:
+            pen = ps.TOO_SHORT_PENALTY
+            self.score_log.append(("too_short", pen))
+            self.spam_likelihood += pen
+        elif l > ps.LENGTH_THRESHOLD_LONG:
+            pen = ps.TOO_LONG_BONUS
+            self.score_log.append(("very_long", pen))
+            self.spam_likelihood += pen
+
     # TRAINING
-    def get_dicts_from_training(self, path_to_corp): #vraci spam_words, ham_words
+    def get_dicts_from_training(self, path_to_corp): #vraci spam_words, ham_words, sender_classif
         t_corp = corpus.Corpus(path_to_corp)
         truth_file = os.path.join(path_to_corp, "!truth.txt")
         truth_dict = utils.read_classification_from_file(truth_file)
         spam_words = {}
         ham_words = {}
+        sender_classif = {}
         s_e_count = 0
         h_e_count = 0
 
         for file, raw in t_corp.emails():
             sender_email, time_sent, subject, true_body, reply_flag = self.parse_email(raw)
+            sender_classif[sender_email] = truth_dict[file]
+
             if self.general_or_html(true_body):
                 true_body = self.normalise_html_body(true_body)
             #zjisteni jestli je mail ham nebo spam
@@ -497,7 +521,7 @@ class MyFilter:
 
         for word in ham_words.keys():
             ham_words[word] *= s_e_count/h_e_count # pro spravny pomer, spamu byva vice
-        return spam_words, ham_words
+        return spam_words, ham_words, sender_classif
 
 
     def compare_trained_dicts(self, spam_words, ham_words):
@@ -522,24 +546,32 @@ class MyFilter:
                 self.score_log.append(("trained_word", pen))
                 self.spam_likelihood += pen
 
-    def check_length(self, body):
-        l = len(body)
-        if l < ps.LENGTH_THRESHOLD_SHORT:
-            pen = ps.TOO_SHORT_PENALTY
-            self.score_log.append(("too_short", pen))
-            self.spam_likelihood += pen
-        elif l > ps.LENGTH_THRESHOLD_LONG:
-            pen = ps.TOO_LONG_BONUS
-            self.score_log.append(("very_long", pen))
-            self.spam_likelihood += pen
+    def check_known_sender(self, sender):
+        if sender in self.known_senders:
+            if self.known_senders[sender] == SPAM_TAG:
+                pen = ps.PENALTY_TRAINED_MULTIPLIER
+                self.score_log.append(("bad_sender", pen))
+                self.spam_likelihood += pen
+            else:
+                pen = ps.TRUSTED_SENDER_BONUS
+                self.score_log.append(("good_sender", pen))
+                self.spam_likelihood += pen
 
+    def get_dicts_to_file(self, dict_spam, dict_ham):
+        with open('new_words.txt', 'w') as f:
+            f.write("SPAM =")
+            f.write(str(dict_spam))
+            f.write('\nHAM =')
+            f.write(str(dict_ham))
 
 if __name__ == "__main__":
     f = MyFilter()
     base_dir = os.path.dirname(os.path.abspath(__file__))
     corpus_folder = sys.argv[1] if len(sys.argv) > 1 else "1"
     corpus_dir = os.path.join(base_dir, "spamfilter-data", corpus_folder)
-    #f.train(corpus_dir)
+    training_corpus_folder = sys.argv[2] if len(sys.argv) > 2 else "2"
+    training_corpus_dir = os.path.join(base_dir, "spamfilter-data", training_corpus_folder)
+    f.train(training_corpus_dir)
     f.test(corpus_dir) 
     q = quality.compute_quality_for_corpus(corpus_dir)
     print(f"{q:.6f}")

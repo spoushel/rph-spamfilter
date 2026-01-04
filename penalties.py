@@ -63,4 +63,7 @@ LENGTH_THRESHOLD_LONG = 1200
 
 #training
 MIN_SCORE_FOR_NEW_WORD = 25
-PENALTY_TRAINED_MULTIPLIER = 0.005 # score je nasobeno timto cislem
+PENALTY_TRAINED_MULTIPLIER = 0.005 # score je nasobeno timto cislem  <- celkem znatelne rodily mezi sadami
+TRUSTED_SENDER_BONUS = - 0.5
+SPAM_SENDER_PENALTY = 0.5
+ALLOWENCE = 0.1 # jaky nejmensi likelihood musi mit mail pro prochazeni trained dict

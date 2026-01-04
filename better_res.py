@@ -18,12 +18,13 @@ def load_info_file(path_to_file):
                     out[key] = tag
     return out
 
-def create_better_results(path_to_corpus):
+def create_better_results(path_to_corpus, path_to_training_corpus):
     pred = load_info_file(os.path.join(path_to_corpus, "!prediction.txt"))
     truth = load_info_file(os.path.join(path_to_corpus, "!truth.txt"))
 
     corp = corpus.Corpus(path_to_corpus)
     f = MyFilter()
+    f.train(path_to_training_corpus)
     f.cycle_emails(corp)
     scores = f.scores
     pred = f.prediction
@@ -61,4 +62,8 @@ if __name__ == "__main__":
     base_dir = os.path.dirname(os.path.abspath(__file__))
     corpus_folder = sys.argv[1] if len(sys.argv) > 1 else "1"
     corpus_dir = os.path.join(base_dir, "spamfilter-data", corpus_folder)
-    create_better_results(corpus_dir)
+
+    training_corpus_folder = sys.argv[2] if len(sys.argv) > 2 else "2"
+    training_corpus_dir = os.path.join(base_dir, "spamfilter-data", training_corpus_folder)
+
+    create_better_results(corpus_dir, training_corpus_dir)
