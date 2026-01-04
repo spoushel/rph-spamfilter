@@ -34,5 +34,6 @@ URGENCY = {"please", "give", "send", "beg", "begging", "urgent", "important",
            "crucial", "immediately", "asap", "soon", "need", "minute", "minutes"
            "safety", "chance", "help", "needs"}
 
-GOOD_WORDS = {"java", "linux", "c++", "thanks", "javascript", "tech"
-              "intel", "techs", "windows", "CNET", "IT", "news", "edu"}
+GOOD_WORDS = {"java", "linux", "c++", "thanks", "javascript", "tech", "intel", "techs", 
+              "windows", "CNET", "IT", "news", "edu", "python", "git", "hardware", "coding",
+              "confrence", "programming", "unix"}

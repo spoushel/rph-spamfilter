@@ -47,6 +47,7 @@ class MyFilter:
             self.check_sender_chars(sender_email)
             self.check_newsletter(subject, true_body)
             self.check_interpunction_gaps(true_body)
+            self.check_length(true_body)
             #dict checks
             self.check_dict(true_body, ds.EXPLICIT, ps.DICT_EXPLICIT, ps.NUM_EXPLICIT)
             self.check_dict(true_body, ds.EXPLICIT_S, ps.DICT_EXPLICIT_S, ps.NUM_EXPLICIT_S)
@@ -387,6 +388,18 @@ class MyFilter:
                 self.spam_likelihood += pen
                 break  
             prev_pos = curr_pos
+
+    def check_length(self, body):
+        l = len(body)
+        if l < ps.LENGTH_THRESHOLD_SHORT:
+            pen = ps.TOO_SHORT_PENALTY
+            self.score_log.append(("too_short", pen))
+            self.spam_likelihood += pen
+        elif l > ps.LENGTH_THRESHOLD_LONG:
+            pen = ps.TOO_LONG_BONUS
+            self.score_log.append(("very_long", pen))
+            self.spam_likelihood += pen
+
 
 if __name__ == "__main__":
     f = MyFilter()

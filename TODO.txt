@@ -1,13 +1,11 @@
 CIL: NAD 0.7
 
-CURRENT MAX: 0.563117
+CURRENT MAX: 0.583141
 
-- HELCA: script/funkce co ukaze jak se to hodnoceni tvorilo
 - NELA: hodne procent test?
 - NELA: urgent do filtrovani subjectu, separatne good slova do domen (napr newsletter, edu)
 - NELA: caps procenta delky pocet slov/pocet capped slov
 - BOTH: linux nerd slova dodelat
-- HELCA: pokud ma mail pres nejakou delku / naopak pokud je kratsi nez neco
 - NELA: zacit ucici se funkce
 
 
@@ -21,3 +19,6 @@ latest zmeny:
 - vytvoreni !prediction.txt
 - udelat script na porovnani co mame spatne, se spam likelihood, nahore co je FP potom FN (pridat i do predictions)
 - updatenout tokenizaci emailu in-reply-to: automaticky neni spam
+- HELCA: script/funkce co ukaze jak se to hodnoceni tvorilo
+- HELCA: pokud ma mail pres nejakou delku / naopak pokud je kratsi nez neco
+
