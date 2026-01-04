@@ -35,12 +35,12 @@ class MyFilter:
                 self.check_html_colours(true_body)
                 self.check_domains(true_body, sender_email)
                 true_body = self.normalise_html_body(true_body) # strip do normalni podoby pro basic checks
-            #TODO helca stuffs
+            else:
+                self.check_comma_spaces(true_body)
             self.check_num_interpunction(true_body)
             self.check_double_inter(true_body)
             self.check_caps(subject, 7) 
             self.check_sentence_end(true_body)
-            self.check_comma_spaces(true_body)
             self.check_time(time_sent)
             self.check_capitalised_words(true_body)
             self.check_non_ascii_chars(subject, true_body)
@@ -382,8 +382,8 @@ class MyFilter:
             excess = count - PEN_NUM
             if excess > 0:
                 pen = PENALTY
-                self.score_log.append(("dict_money_urg", excess  *pen))
-                self.spam_likelihood += excess * pen
+                self.score_log.append(("dict_money_or_urg", pen))
+                self.spam_likelihood += pen 
         elif count >= PEN_NUM:
             pen = PENALTY
             self.score_log.append(("dict_regular", pen))

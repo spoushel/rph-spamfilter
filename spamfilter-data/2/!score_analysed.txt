@@ -1,0 +1,15 @@
+Score analysis for 0598.1ac8a662753f1bba429f52eb184ba794
+Final score: 0.680
+
+check_double_inter                       +0.050
+check_double_inter                       +0.050
+check_double_inter                       +0.050
+check_double_inter                       +0.050
+check_double_inter                       +0.050
+check_double_inter                       +0.050
+check_double_inter                       +0.050
+check_double_inter                       +0.050
+sentence_end                             +0.050
+cap_words_small                          +0.150
+very_long                                -0.200
+dict_money_or_urg                        +0.280
