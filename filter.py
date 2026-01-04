@@ -41,12 +41,12 @@ class MyFilter:
                 self.check_html_colours(true_body)
                 self.check_domains(true_body, sender_email)
                 true_body = self.normalise_html_body(true_body) # strip do normalni podoby pro basic checks
-            #TODO helca stuffs
+            else:
+                self.check_comma_spaces(true_body)
             self.check_num_interpunction(true_body)
             self.check_double_inter(true_body)
             self.check_caps(subject, 7) 
             self.check_sentence_end(true_body)
-            self.check_comma_spaces(true_body)
             self.check_time(time_sent)
             self.check_capitalised_words(true_body)
             self.check_non_ascii_chars(subject, true_body)
@@ -57,6 +57,7 @@ class MyFilter:
             # ^ lehce zhorsuje skore (o 0.003 v prvni sade, o 0.14 v druhe sade)
 
             self.check_interpunction_gaps(true_body)
+            self.check_length(true_body)
             #dict checks
             self.check_dict(true_body, ds.EXPLICIT, ps.DICT_EXPLICIT, ps.NUM_EXPLICIT)
             self.check_dict(true_body, ds.EXPLICIT_S, ps.DICT_EXPLICIT_S, ps.NUM_EXPLICIT_S)
@@ -403,8 +404,8 @@ class MyFilter:
             excess = count - PEN_NUM
             if excess > 0:
                 pen = PENALTY
-                self.score_log.append(("dict_money_urg", excess  *pen))
-                self.spam_likelihood += excess * pen
+                self.score_log.append(("dict_money_or_urg", pen))
+                self.spam_likelihood += pen 
         elif count >= PEN_NUM:
             pen = PENALTY
             self.score_log.append(("dict_regular", pen))
@@ -521,6 +522,16 @@ class MyFilter:
                 self.score_log.append(("trained_word", pen))
                 self.spam_likelihood += pen
 
+    def check_length(self, body):
+        l = len(body)
+        if l < ps.LENGTH_THRESHOLD_SHORT:
+            pen = ps.TOO_SHORT_PENALTY
+            self.score_log.append(("too_short", pen))
+            self.spam_likelihood += pen
+        elif l > ps.LENGTH_THRESHOLD_LONG:
+            pen = ps.TOO_LONG_BONUS
+            self.score_log.append(("very_long", pen))
+            self.spam_likelihood += pen
 
 
 if __name__ == "__main__":

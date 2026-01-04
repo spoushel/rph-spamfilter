@@ -6,13 +6,7 @@ opravena chyba v special_punc_case: 0.625616 (druha sada v tyhle chvili 0.552)
 po merge: 0.674142
 CURRENT MAX: 0.674142
 
-- HELCA: script/funkce co ukaze jak se to hodnoceni tvorilo
-*- NELA: hodne procent test?
-*- NELA: urgent do filtrovani subjectu, 
-*- NELA: separatne good slova do domen (napr newsletter, edu)
-*- NELA: caps procenta delky pocet slov/pocet capped slov
 - BOTH: linux nerd slova dodelat
-- HELCA: pokud ma mail pres nejakou delku / naopak pokud je kratsi nez neco
 - NELA: zacit ucici se funkce
 
 
@@ -26,3 +20,10 @@ latest zmeny:
 - vytvoreni !prediction.txt
 - udelat script na porovnani co mame spatne, se spam likelihood, nahore co je FP potom FN (pridat i do predictions)
 - updatenout tokenizaci emailu in-reply-to: automaticky neni spam
+- HELCA: script/funkce co ukaze jak se to hodnoceni tvorilo
+- HELCA: pokud ma mail pres nejakou delku / naopak pokud je kratsi nez neco
+*- NELA: hodne procent test?
+*- NELA: urgent do filtrovani subjectu, 
+*- NELA: separatne good slova do domen (napr newsletter, edu)
+*- NELA: caps procenta delky pocet slov/pocet capped slov
+

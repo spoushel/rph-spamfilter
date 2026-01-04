@@ -3,6 +3,7 @@ from filter import MyFilter
 import corpus 
 import os
 import quality
+import sys
 
 TAGS = {"SPAM", "OK"}
 
@@ -58,6 +59,6 @@ def create_better_results(path_to_corpus):
 
 if __name__ == "__main__":
     base_dir = os.path.dirname(os.path.abspath(__file__))
-    corpus_folder = "1"
+    corpus_folder = sys.argv[1] if len(sys.argv) > 1 else "1"
     corpus_dir = os.path.join(base_dir, "spamfilter-data", corpus_folder)
     create_better_results(corpus_dir)
